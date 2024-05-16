@@ -1,0 +1,26 @@
+- Create a new GitHub repository:
+
+  https://github.com/new
+
+  Repository name: torch_fuel
+
+  $ git remote add origin git@github.com:kalekundert/torch_fuel.git
+  $ git push -u origin master
+
+- Create a "pending" trusted publisher:
+
+  https://pypi.org/manage/account/publishing/
+
+  PyPI project name: torch_fuel
+  Owner:             kalekundert
+  Repository name:   torch_fuel
+  Workflow name:     release.yml
+
+- Add Codecov token to GitHub:
+
+  https://app.codecov.io/gh/kalekundert/torch_fuel/new
+  https://github.com/kalekundert/torch_fuel/settings/secrets/actions/new
+
+- Install the pre-commit linting hook:
+
+  $ pre-commit install
