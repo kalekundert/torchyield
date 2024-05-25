@@ -62,6 +62,15 @@ def channels(
     return dict(zip(keys, values))
 
 
+def mlp_layer(layer_factory, in_channels, out_channels, **kwargs):
+    yield from make_layers(
+            layer_factory,
+            in_channels=in_channels[:-1],
+            out_channels=out_channels[:-1],
+            **kwargs,
+    )
+    yield nn.Linear(in_channels[-1], out_channels[-1], bias=True)
+
 def linear_relu_layer(
         *,
         in_channels: int,
