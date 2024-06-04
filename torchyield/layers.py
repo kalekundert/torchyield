@@ -56,24 +56,3 @@ def mlp_layer(layer_factory, in_channels, out_channels, **kwargs):
     )
     yield nn.Linear(in_channels[-1], out_channels[-1], bias=True)
 
-def linear_relu_layer(
-        *,
-        in_channels: int,
-        out_channels: int,
-        bias: bool = True,
-):
-    yield nn.Linear(in_channels, out_channels, bias=True)
-    yield nn.ReLU()
-
-def linear_relu_dropout_layer(
-        *,
-        in_channels: int,
-        out_channels: int,
-        bias: bool = True,
-        drop_rate: float,
-):
-    assert 0 <= drop_rate <= 1
-    yield nn.Linear(in_channels, out_channels, bias=True)
-    yield nn.ReLU()
-    yield nn.Dropout(drop_rate)
-
