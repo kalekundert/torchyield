@@ -6,11 +6,7 @@ from itertools import cycle
 from collections.abc import Iterable, Callable
 from typing import TypeAlias
 
-LayerFactory: TypeAlias = Callable[..., Iterable[nn.Module]]
-
-BRIGHT_WHITE = '\033[97m'
-RESET_COLOR = '\033[0m'
-DEFAULT_VERBOSE_TEMPLATE = f'{BRIGHT_WHITE}{{}}\n{{}}{RESET_COLOR}\n{79*"─"}'
+LayerFactory: TypeAlias = Callable[..., Iterable[nn.Module] | nn.Module]
 
 class Layers(nn.Sequential):
 
@@ -22,19 +18,6 @@ class Layers(nn.Sequential):
 
         super().__init__(*layers)
 
-class VerboseModuleWrapper(nn.Module):
-
-    def __init__(self, module, template=DEFAULT_VERBOSE_TEMPLATE, **kwargs):
-        super().__init__()
-        self.module = module
-        self.template = template
-        self.print_kwargs = kwargs
-
-    def forward(self, x):
-        print(self.template.format(self.module, x.shape), **self.print_kwargs)
-        return self.module(x)
-
-
 def make_layers(layer_factory: LayerFactory, **params):
     # Normally we want to be strict, but `itertools.cycle()` is useful enough 
     # to merit an exception.
@@ -42,7 +25,12 @@ def make_layers(layer_factory: LayerFactory, **params):
 
     for values in zip_broadcast(*params.values(), strict=strict):
         kwargs = dict(zip(params.keys(), values))
-        yield from layer_factory(**kwargs)
+        layer = layer_factory(**kwargs)
+
+        if isinstance(layer, nn.Module):
+            yield layer
+        else:
+            yield from layer
 
 def concat_layers(*layers: nn.Module | Iterable[nn.Module]):
     for layer in layers:
@@ -50,9 +38,6 @@ def concat_layers(*layers: nn.Module | Iterable[nn.Module]):
             yield layer
         else:
             yield from layer
-
-def verbose(layers):
-    yield from map(VerboseModuleWrapper, layers)
 
 def channels(
         channels: Iterable[int],

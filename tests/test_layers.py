@@ -1,5 +1,5 @@
 import torch.nn as nn
-import torch_fuel as tfu
+import torchyield as ty
 import pytest
 
 from itertools import cycle
@@ -16,17 +16,17 @@ def test_layers_cnn():
         yield nn.Linear(in_channels, out_channels)
         yield nn.ReLU()
 
-    cnn = tfu.Layers(
-            tfu.make_layers(
+    cnn = ty.Layers(
+            ty.make_layers(
                 conv_relu_maxpool,
-                **tfu.channels([3, 32, 64]),
+                **ty.channels([3, 32, 64]),
                 kernel_size=5,
                 pool_size=[1, 2],
             ),
             nn.Flatten(),
-            tfu.make_layers(
+            ty.make_layers(
                 linear_relu,
-                **tfu.channels([64*4, 1]),
+                **ty.channels([64*4, 1]),
             ),
     )
 
@@ -66,7 +66,7 @@ def test_make_layers():
     def layer_factory(**kwargs):
         yield kwargs
 
-    layers = tfu.make_layers(
+    layers = ty.make_layers(
             layer_factory,
             a=1,
             b=[2,3],
@@ -81,7 +81,7 @@ def test_make_layers_strict():
     def layer_factory(**kwargs):
         yield kwargs
 
-    layers = tfu.make_layers(
+    layers = ty.make_layers(
             layer_factory,
             a=[1,2],
             b=[3,4,5],
@@ -94,7 +94,7 @@ def test_make_layers_cycle():
     def layer_factory(**kwargs):
         yield kwargs
 
-    layers = tfu.make_layers(
+    layers = ty.make_layers(
             layer_factory,
             a=[1,2,3,4],
             b=cycle([5,6]),
@@ -108,13 +108,13 @@ def test_make_layers_cycle():
 
 
 def test_channels():
-    assert tfu.channels([1,2,3,4]) == dict(
+    assert ty.channels([1,2,3,4]) == dict(
             in_channels=[1,2,3],
             out_channels=[2,3,4],
     )
 
 def test_channels_keys():
-    assert tfu.channels([1,2,3,4], keys=('a', 'b')) == dict(
+    assert ty.channels([1,2,3,4], keys=('a', 'b')) == dict(
             a=[1,2,3],
             b=[2,3,4],
     )

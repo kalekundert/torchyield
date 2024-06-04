@@ -4,9 +4,9 @@ Basic Usage
 
 Installation
 ============
-Install ``torch_fuel`` using ``pip``::
+Install ``torchyield`` using ``pip``::
 
-    $ pip install torch_fuel
+    $ pip install torchyield
 
 - Requires python≥3.10
 - Adheres to `semantic versioning`_.

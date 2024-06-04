@@ -1,11 +1,11 @@
-import torch_fuel
+import torchyield
 
 ## General
 
-project = 'Torch Fuel'
+project = 'Torch Yield'
 copyright = '2024, Kale Kundert'
-version = torch_fuel.__version__
-release = torch_fuel.__version__
+version = torchyield.__version__
+release = torchyield.__version__
 
 master_doc = 'index'
 source_suffix = '.rst'
