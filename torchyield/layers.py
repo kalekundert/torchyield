@@ -14,7 +14,8 @@ class Layers(nn.Sequential):
         layers = concat_layers(*layers)
 
         if verbose:
-            layers = globals()['verbose'](layers)
+            from .verbose import verbose as _verbose
+            layers = _verbose(layers)
 
         super().__init__(*layers)
 

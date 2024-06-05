@@ -2,7 +2,7 @@ import torch.nn as nn
 
 BRIGHT_WHITE = '\033[97m'
 RESET_COLOR = '\033[0m'
-DEFAULT_VERBOSE_TEMPLATE = f'{BRIGHT_WHITE}{{}}\n{{}}{RESET_COLOR}\n{79*"─"}'
+DEFAULT_VERBOSE_TEMPLATE = f'{BRIGHT_WHITE}{{}}\nin: {{}}{RESET_COLOR}\n{79*"─"}'
 
 class VerboseModuleWrapper(nn.Module):
 
