@@ -90,10 +90,31 @@ def test_conv3():
     assert net.out_channels == 2
     assert net.kernel_size == (3, 3, 3)
 
+def test_maxpool_err():
+    with pytest.raises(
+            ValueError,
+            match=r"'maxpool' must come after 'linear' or 'conv'",
+    ):
+        _, = ty.maxpool_layer()
+
+def test_avgpool_err():
+    with pytest.raises(
+            ValueError,
+            match=r"'avgpool' must come after 'linear' or 'conv'",
+    ):
+        _, = ty.avgpool_layer()
+
 def test_relu():
     net, = ty.relu_layer()
 
     assert isinstance(net, nn.ReLU)
+    assert net.inplace == True
+
+def test_relu_inplace():
+    net, = ty.relu_layer(inplace=False)
+
+    assert isinstance(net, nn.ReLU)
+    assert net.inplace == False
 
 def test_bn_err():
     with pytest.raises(
@@ -188,6 +209,105 @@ def test_conv2_relu_bn():
     assert bn.affine == False
     assert bn.track_running_stats == False
 
+def test_conv2_maxpool():
+    conv, pool = ty.conv2_maxpool_layer(
+            in_channels=1,
+            out_channels=2,
+            kernel_size=3,
+
+            pool_size=4,
+            pool_stride=5,
+            pool_padding=6,
+            pool_dilation=7,
+            pool_ceil_mode=True,
+    )
+
+    assert isinstance(conv, nn.Conv2d)
+    assert conv.in_channels == 1
+    assert conv.out_channels == 2
+    assert conv.kernel_size == (3, 3)
+
+    assert isinstance(pool, nn.MaxPool2d)
+    assert pool.kernel_size == 4
+    assert pool.stride == 5
+    assert pool.padding == 6
+    assert pool.dilation == 7
+    assert pool.ceil_mode == True
+
+def test_conv2_maxpool_skip():
+    conv, = ty.conv2_maxpool_layer(
+            in_channels=1,
+            out_channels=2,
+            kernel_size=3,
+
+            pool_size=1,
+            pool_stride=5,
+            pool_padding=6,
+            pool_dilation=7,
+            pool_ceil_mode=True,
+    )
+
+    assert isinstance(conv, nn.Conv2d)
+    assert conv.in_channels == 1
+    assert conv.out_channels == 2
+    assert conv.kernel_size == (3, 3)
+
+def test_conv2_avgpool():
+    conv, pool = ty.conv2_avgpool_layer(
+            in_channels=1,
+            out_channels=2,
+            kernel_size=3,
+
+            pool_size=4,
+            pool_stride=5,
+            pool_padding=6,
+            pool_ceil_mode=True,
+            pool_count_include_pad=False,
+            pool_divisor_override=7,
+    )
+
+    assert isinstance(conv, nn.Conv2d)
+    assert conv.in_channels == 1
+    assert conv.out_channels == 2
+    assert conv.kernel_size == (3, 3)
+
+    assert isinstance(pool, nn.AvgPool2d)
+    assert pool.kernel_size == 4
+    assert pool.stride == 5
+    assert pool.padding == 6
+    assert pool.ceil_mode == True
+    assert pool.count_include_pad == False
+    assert pool.divisor_override == 7
+
+def test_conv2_avgpool_skip():
+    conv, = ty.conv2_avgpool_layer(
+            in_channels=1,
+            out_channels=2,
+            kernel_size=3,
+
+            pool_size=1,
+            pool_stride=5,
+            pool_padding=6,
+            pool_ceil_mode=True,
+            pool_count_include_pad=False,
+            pool_divisor_override=7,
+    )
+
+    assert isinstance(conv, nn.Conv2d)
+    assert conv.in_channels == 1
+    assert conv.out_channels == 2
+    assert conv.kernel_size == (3, 3)
+
+
+def test_err_unknown_module():
+    with pytest.raises(
+            AttributeError,
+            match=r"linear_relu_max_pool_layer\(\) includes unknown module 'max'\n.*did you mean. 'maxpool'",
+    ):
+        _, _, _ = ty.linear_relu_max_pool_layer(
+                in_channels=1,
+                out_channels=2,
+        )
 
 def test_err_unused_arg():
     with pytest.raises(
