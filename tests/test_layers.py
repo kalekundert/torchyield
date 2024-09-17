@@ -5,7 +5,7 @@ import pytest
 from itertools import cycle
 from more_itertools import UnequalIterablesError
 
-def test_layers_cnn():
+def test_module_from_layers_cnn():
 
     def conv_relu_maxpool(in_channels, out_channels, kernel_size, pool_size):
         yield nn.Conv2d(in_channels, out_channels, kernel_size)
@@ -16,7 +16,7 @@ def test_layers_cnn():
         yield nn.Linear(in_channels, out_channels)
         yield nn.ReLU()
 
-    cnn = ty.Layers(
+    cnn = ty.module_from_layers(
             ty.make_layers(
                 conv_relu_maxpool,
                 **ty.channels([3, 32, 64]),

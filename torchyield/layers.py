@@ -6,20 +6,32 @@ from itertools import cycle
 from collections.abc import Iterable, Callable
 from typing import TypeAlias
 
-LayerFactory: TypeAlias = Callable[..., Iterable[nn.Module] | nn.Module]
+Layer: TypeAlias = Iterable[nn.Module] | nn.Module
+LayerFactory: TypeAlias = Callable[..., Layer]
 
-class Layers(nn.Sequential):
+def module_from_layers(*layers: Layer, verbose: bool = False) -> nn.Module:
+    layers = modules_from_layers(*layers)
 
-    def __init__(self, *layers, verbose=False):
-        layers = concat_layers(*layers)
+    if verbose:
+        from .verbose import verbose as _verbose
+        layers = _verbose(layers)
 
-        if verbose:
-            from .verbose import verbose as _verbose
-            layers = _verbose(layers)
+    layers = list(layers)
 
-        super().__init__(*layers)
+    if len(layers) == 1:
+        return layers[0]
+    else:
+        return nn.Sequential(*layers)
 
-def make_layers(layer_factory: LayerFactory, **params):
+def modules_from_layers(*layers: Layer) -> Iterable[nn.Module]:
+    for layer in layers:
+        if isinstance(layer, nn.Module):
+            yield layer
+        else:
+            yield from layer
+
+
+def make_layers(layer_factory: LayerFactory, **params) -> Iterable[Layer]:
     # Normally we want to be strict, but `itertools.cycle()` is useful enough 
     # to merit an exception.
     strict = not any(isinstance(x, cycle) for x in params.values())
@@ -28,13 +40,6 @@ def make_layers(layer_factory: LayerFactory, **params):
         kwargs = dict(zip(params.keys(), values))
         layer = layer_factory(**kwargs)
 
-        if isinstance(layer, nn.Module):
-            yield layer
-        else:
-            yield from layer
-
-def concat_layers(*layers: nn.Module | Iterable[nn.Module]):
-    for layer in layers:
         if isinstance(layer, nn.Module):
             yield layer
         else:

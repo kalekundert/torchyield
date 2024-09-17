@@ -104,7 +104,7 @@ def alexnet():
     )
 
 # Convert the generator into an instance of `torch.nn.Sequential`:
-f = ty.Layers(alexnet())
+f = ty.module_from_layers(alexnet())
 
 # Demonstrate that the model works, i.e. it can make a prediction 
 # given random input:
