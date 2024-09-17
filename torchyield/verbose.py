@@ -12,9 +12,9 @@ class VerboseModuleWrapper(nn.Module):
         self.template = template
         self.print_kwargs = kwargs
 
-    def forward(self, x):
+    def forward(self, x, *args, **kwargs):
         print(self.template.format(self.module, x.shape), **self.print_kwargs)
-        return self.module(x)
+        return self.module(x, *args, **kwargs)
 
 def verbose(layers):
     yield from map(VerboseModuleWrapper, layers)
