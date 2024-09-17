@@ -2,6 +2,23 @@
 
 
 
+## v0.2.0 (2024-09-17)
+
+### Chore
+
+* chore: remove TODO file ([`722f7eb`](https://github.com/kalekundert/torchyield/commit/722f7eb8043ada3b6ad6daf8d7de5ab614c3596c))
+
+### Feature
+
+* feat: don&#39;t unnecessarily wrap modules
+
+Instead of providing a `Layers` class, provide a `module_from_layers()`.
+If all the layers put together produce only a single module, this makes
+it possible to simply return that module, without any wrapping. ([`7e6fdc1`](https://github.com/kalekundert/torchyield/commit/7e6fdc1596423d974267dc47c53d350c40104fb1))
+
+* feat: allow verbose modules to take multiple arguments ([`0579427`](https://github.com/kalekundert/torchyield/commit/05794276b7e8a555e81db00bcf8fe42a183b4118))
+
+
 ## v0.1.0 (2024-06-05)
 
 ### Chore
