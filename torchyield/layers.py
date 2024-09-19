@@ -18,7 +18,9 @@ def module_from_layers(*layers: Layer, verbose: bool = False) -> nn.Module:
 
     layers = list(layers)
 
-    if len(layers) == 1:
+    if len(layers) == 0:
+        return nn.Identity()
+    elif len(layers) == 1:
         return layers[0]
     else:
         return nn.Sequential(*layers)

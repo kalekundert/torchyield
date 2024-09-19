@@ -5,6 +5,19 @@ import pytest
 from itertools import cycle
 from more_itertools import UnequalIterablesError
 
+def test_module_from_layers_empty():
+    noop = ty.module_from_layers()
+    assert isinstance(noop, nn.Identity)
+
+def test_module_from_layers_solo():
+    conv = nn.Conv3d(
+            in_channels=2,
+            out_channels=4,
+            kernel_size=3,
+    )
+    module = ty.module_from_layers(conv)
+    assert module is conv
+
 def test_module_from_layers_cnn():
 
     def conv_relu_maxpool(in_channels, out_channels, kernel_size, pool_size):
