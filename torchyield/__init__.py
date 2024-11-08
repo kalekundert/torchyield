@@ -2,7 +2,7 @@
 Make PyTorch models using generator functions.
 """
 
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 from .layers import *
 from .verbose import *

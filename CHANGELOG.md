@@ -2,6 +2,19 @@
 
 
 
+## v0.3.0 (2024-11-08)
+
+### Feature
+
+* feat: provide an immutable sequential module ([`2c8bcad`](https://github.com/kalekundert/torchyield/commit/2c8bcad1e6d09e52c0336abebe706971317eed1d))
+
+* feat: monkeypatch Tensor repr to only show shape ([`63aa908`](https://github.com/kalekundert/torchyield/commit/63aa908726dd72c689175598b76b10c919a5a2f8))
+
+### Fix
+
+* fix: interpret an empty layer iterable as an identity module ([`3cb36a5`](https://github.com/kalekundert/torchyield/commit/3cb36a5d337bad2cf998716b91edcb7cec11bc5f))
+
+
 ## v0.2.0 (2024-09-17)
 
 ### Chore
