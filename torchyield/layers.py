@@ -9,6 +9,26 @@ from typing import TypeAlias
 Layer: TypeAlias = Iterable[nn.Module] | nn.Module
 LayerFactory: TypeAlias = Callable[..., Layer]
 
+class FrozenSequential(nn.Module):
+    """
+    Execute the given layers in sequential order.
+
+    Once constructed, the layers cannot be modified.  This makes inheriting 
+    from this class a bit more convenient.  Since no API for modifying 
+    the layers is exposed, subclasses do not have their namespaces polluted 
+    with potentially dangerous methods.
+    """
+
+    def __init__(self, *layers: Layer):
+        super().__init__()
+        for i, child in enumerate(modules_from_layers(*layers)):
+            self.add_module(str(i), child)
+
+    def forward(self, x):
+        for module in self.children():
+            x = module(x)
+        return x
+
 def module_from_layers(*layers: Layer, verbose: bool = False) -> nn.Module:
     layers = modules_from_layers(*layers)
 
