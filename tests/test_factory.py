@@ -2,6 +2,8 @@ import torch.nn as nn
 import torchyield as ty
 import pytest
 
+from pytest import approx
+
 def test_linear():
     net, = ty.linear_layer(
             in_channels=1,
@@ -115,6 +117,80 @@ def test_relu_inplace():
 
     assert isinstance(net, nn.ReLU)
     assert net.inplace == False
+
+def test_leakyrelu():
+    net, = ty.leakyrelu_layer()
+
+    assert isinstance(net, nn.LeakyReLU)
+    assert net.inplace == True
+    assert net.negative_slope == approx(0.01)
+
+def test_leakyrelu_inplace():
+    net, = ty.leakyrelu_layer(inplace=False)
+
+    assert isinstance(net, nn.LeakyReLU)
+    assert net.inplace == False
+    assert net.negative_slope == approx(0.01)
+
+def test_leakyrelu_slope():
+    net, = ty.leakyrelu_layer(leakyrelu_negative_slope=0.02)
+
+    assert isinstance(net, nn.LeakyReLU)
+    assert net.inplace == True
+    assert net.negative_slope == approx(0.02)
+
+def test_elu():
+    net, = ty.elu_layer()
+
+    assert isinstance(net, nn.ELU)
+    assert net.inplace == True
+    assert net.alpha == approx(1.0)
+
+def test_elu_inplace():
+    net, = ty.elu_layer(inplace=False)
+
+    assert isinstance(net, nn.ELU)
+    assert net.inplace == False
+    assert net.alpha == approx(1.0)
+
+def test_elu_alpha():
+    net, = ty.elu_layer(elu_alpha=2.0)
+
+    assert isinstance(net, nn.ELU)
+    assert net.inplace == True
+    assert net.alpha == approx(2.0)
+
+def test_selu():
+    net, = ty.selu_layer()
+
+    assert isinstance(net, nn.SELU)
+    assert net.inplace == True
+
+def test_selu_inplace():
+    net, = ty.selu_layer(inplace=False)
+
+    assert isinstance(net, nn.SELU)
+    assert net.inplace == False
+
+def test_gelu():
+    net, = ty.gelu_layer()
+
+    assert isinstance(net, nn.GELU)
+    assert net.approximate == 'none'
+
+def test_gelu_approximate():
+    net, = ty.gelu_layer(gelu_approximate='tanh')
+
+    assert isinstance(net, nn.GELU)
+    assert net.approximate == 'tanh'
+
+def test_sigmoid():
+    net, = ty.sigmoid_layer()
+    assert isinstance(net, nn.Sigmoid)
+
+def test_tanh():
+    net, = ty.tanh_layer()
+    assert isinstance(net, nn.Tanh)
 
 def test_bn_err():
     with pytest.raises(

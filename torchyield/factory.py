@@ -220,6 +220,12 @@ FACTORY_GETTERS = {
             3: nn.AvgPool3d,
         }),
         'relu': get_module(nn.ReLU),
+        'leakyrelu': get_module(nn.LeakyReLU),
+        'elu': get_module(nn.ELU),
+        'selu': get_module(nn.SELU),
+        'gelu': get_module(nn.GELU),
+        'sigmoid': get_module(nn.Sigmoid),
+        'tanh': get_module(nn.Tanh),
         'bn': get_module_by_dim({
             1: nn.BatchNorm1d,
             2: nn.BatchNorm2d,
@@ -268,6 +274,28 @@ FACTORY_KWARGS_GETTERS = {
         'relu': [
             get_inplace,
         ],
+        'leakyrelu': [
+            get_inplace,
+            get_kwargs(
+                leakyrelu_negative_slope='negative_slope',
+            ),
+        ],
+        'elu': [
+            get_inplace,
+            get_kwargs(
+                elu_alpha='alpha',
+            ),
+        ],
+        'selu': [
+            get_inplace,
+        ],
+        'gelu': [
+            get_kwargs(
+                gelu_approximate='approximate',
+            ),
+        ],
+        'sigmoid': [],
+        'tanh': [],
         'bn': [
             get_curr_channels('num_features'),
             get_kwargs(
