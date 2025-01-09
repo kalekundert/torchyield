@@ -29,6 +29,9 @@ class FrozenSequential(nn.Module):
             x = module(x)
         return x
 
+def module_from_layer(layer: Layer, verbose: bool = False) -> nn.Module:
+    return module_from_layers(layer, verbose=verbose)
+
 def module_from_layers(*layers: Layer, verbose: bool = False) -> nn.Module:
     layers = modules_from_layers(*layers)
 
@@ -44,6 +47,9 @@ def module_from_layers(*layers: Layer, verbose: bool = False) -> nn.Module:
         return layers[0]
     else:
         return nn.Sequential(*layers)
+
+def modules_from_layer(layer: Layer) -> Iterable[nn.Module]:
+    yield from modules_from_layers(layer)
 
 def modules_from_layers(*layers: Layer) -> Iterable[nn.Module]:
     for layer in layers:
