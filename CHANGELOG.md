@@ -2,6 +2,15 @@
 
 
 
+## v0.4.0 (2025-01-10)
+
+### Feature
+
+* feat: add convenience functions for working with one layer ([`4c24c8a`](https://github.com/kalekundert/torchyield/commit/4c24c8a90b33ac12ef2b670efdb632c77f63744b))
+
+* feat: add more nonlinearities ([`f997ab2`](https://github.com/kalekundert/torchyield/commit/f997ab2ec810188f62574d5814c814836c6dd007))
+
+
 ## v0.3.0 (2024-11-08)
 
 ### Feature
