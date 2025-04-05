@@ -24,9 +24,9 @@ class FrozenSequential(nn.Module):
         for i, child in enumerate(modules_from_layers(*layers)):
             self.add_module(str(i), child)
 
-    def forward(self, x):
+    def forward(self, x, *args, **kwargs):
         for module in self.children():
-            x = module(x)
+            x = module(x, *args, **kwargs)
         return x
 
 def module_from_layer(layer: Layer, verbose: bool = False) -> nn.Module:
