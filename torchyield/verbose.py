@@ -16,6 +16,8 @@ class VerboseModuleWrapper(nn.Module):
         print(self.template.format(self.module, x.shape), **self.print_kwargs)
         return self.module(x, *args, **kwargs)
 
+VerboseIdentity = VerboseModuleWrapper(nn.Identity())
+
 def verbose(layers):
     yield from map(VerboseModuleWrapper, layers)
 
